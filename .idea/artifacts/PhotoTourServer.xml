@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PhotoTourServer">
+    <output-path>$PROJECT_DIR$/out/artifacts/PhotoTourServer</output-path>
+    <root id="archive" name="PhotoTourServer.jar">
+      <element id="module-output" name="RestExpress" />
+      <element id="library" level="project" name="javax.json:javax.json-api:1.0" />
+      <element id="library" level="project" name="com.strategicgains:RestExpress:0.11.3" />
+      <element id="library" level="project" name="org.json:json:20160810" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
