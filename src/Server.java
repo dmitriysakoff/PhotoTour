@@ -5,8 +5,13 @@ public class Server {
     public static RestExpress startServer(String[] args) throws Exception {
         RestExpress server = new RestExpress();
         Cities c = new Cities();
+        CityImage ci = new CityImage();
 
         server.uri("/cities", c)
+                .method(HttpMethod.GET)
+                .noSerialization();
+
+        server.uri("/images/city", ci)
                 .method(HttpMethod.GET)
                 .noSerialization();
 

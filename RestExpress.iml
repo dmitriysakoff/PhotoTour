@@ -10,5 +10,6 @@
     <orderEntry type="library" name="javax.json:javax.json-api:1.0" level="project" />
     <orderEntry type="library" name="com.strategicgains:RestExpress:0.11.3" level="project" />
     <orderEntry type="library" name="org.json:json:20160810" level="project" />
+    <orderEntry type="library" name="io.netty:netty:3.10.6.Final" level="project" />
   </component>
 </module>

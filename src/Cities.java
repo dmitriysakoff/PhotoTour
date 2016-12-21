@@ -13,7 +13,7 @@ public class Cities {
                 .put("location", new JSONObject()
                         .put("longitude", 41.5400)
                         .put("latitude", 12.3000))
-                .put("photo", "http://localhost:8080/photoFace_war/images/city?image_uri=Moscow.jpg");
+                .put("photo", "http://188.166.36.161:8080/images/city?image_uri=moscow.jpg");
 
         JSONObject city2 = new JSONObject()
                 .put("name", "Москва")
@@ -21,7 +21,7 @@ public class Cities {
                 .put("location", new JSONObject()
                         .put("longitude", 55.4521)
                         .put("latitude", 37.3704))
-                .put("photo", "http://localhost:8080/photoFace_war/images/city?image_uri=Rome.jpg");
+                .put("photo", "http://188.166.36.161:8080/images/city?image_uri=rome.jpg");
 
         JSONArray array = new JSONArray();
         array.put(city1);
