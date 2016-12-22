@@ -8,14 +8,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.util.List;
 
-public class CityImage
+class CityImage
 {
     //private final static String abs_path = "/root/server/PhotoTour/images/city/";
-    private final static String abs_path = "C:/Users/Dmitry/Desktop/GeoLast/PhotoTour/images/city/";
+    //private final static String abs_path = "C:/Users/Dmitry/Desktop/GeoLast/PhotoTour/images/city/";
+    private final static String abs_path = "C:/IntelliJProjects/Test/PhotoTour/images/city/";
 
     public ChannelBuffer read(Request req, Response res) {
 
@@ -23,7 +21,7 @@ public class CityImage
 
         File imFile = new File(abs_path + image);
 
-        System.out.print(imFile.exists());
+        System.out.println("file exists: " + imFile.exists());
 
         BufferedImage bufferedImage = null;
         try {
@@ -46,10 +44,14 @@ public class CityImage
         }
 
         ChannelBuffer buf = ChannelBuffers.wrappedBuffer(bytes);
-        res.addHeader("Content-Length", String.valueOf(buf.capacity()));
+        res.addHeader("Content-Length", String.valueOf(bytes.length));
+        System.out.println(bytes.length);
+        System.out.println(buf.capacity());
         res.setContentType("image/jpg");
+        res.setBody(buf);
 
         return buf;
 
     }
+
 }

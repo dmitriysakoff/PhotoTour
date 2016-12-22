@@ -3,12 +3,11 @@ import org.json.JSONObject;
 import org.restexpress.Request;
 import org.restexpress.Response;
 
-public class Cities {
+class Cities {
     public String read(Request req, Response res) {
 
-        JSONObject city1 = new JSONObject();
-        city1
-        .put("name", "Рим")
+        JSONObject city1 = new JSONObject()
+                .put("name", "Рим")
                 .put("id", "1")
                 .put("location", new JSONObject()
                         .put("longitude", 41.5400)

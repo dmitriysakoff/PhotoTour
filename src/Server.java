@@ -2,20 +2,27 @@ import io.netty.handler.codec.http.HttpMethod;
 import org.restexpress.RestExpress;
 
 public class Server {
+
+//    private static final int SERVER_PORT = 8080;
+    private static final int SERVER_PORT = 8889;
+
     public static RestExpress startServer(String[] args) throws Exception {
         RestExpress server = new RestExpress();
         Cities c = new Cities();
+        Route r = new Route();
         CityImage ci = new CityImage();
 
         server.uri("/cities", c)
                 .method(HttpMethod.GET)
                 .noSerialization();
 
-        server.uri("/images/city", ci)
-                .method(HttpMethod.GET)
-                .noSerialization();
+        server.uri("/route", r)
+                .method(HttpMethod.POST);
 
-        server.bind(8080);
+        server.uri("/images/city", ci)
+                .method(HttpMethod.GET);
+
+        server.bind(SERVER_PORT);
         return server;
     }
 
