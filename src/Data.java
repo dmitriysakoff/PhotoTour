@@ -2,15 +2,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 
 public class Data {
 
-    public static File getFile(String path) {
-        return new File(path);
-    }
-
-    private static final String URL = "jdbc:postgresql://188.166.36.161:5432/photos";
+    private static final String DB = "jdbc:postgresql://188.166.36.161:5432/photos";
     private static final String USER = "postgres";
     private static final String PASSWORD = "pass17";
     private static Connection conn;
@@ -20,7 +20,7 @@ public class Data {
             // ставим драйвер
             Class.forName("org.postgresql.Driver");
             // подключаемся к бд
-            conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            conn = DriverManager.getConnection(DB, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -96,13 +96,17 @@ public class Data {
                 double lat = res.getDouble("lat");
                 double lon = res.getDouble("lon");
                 // создаём объект спота и набиваем
+                JSONArray vistas = new JSONArray(getVistas(id));
+                // не добавляем споты без вист
+                if (vistas.length() < 1)
+                    continue;
                 JSONObject spot = new JSONObject()
                         .put("id", id)                                  // id строкой
                         .put("name", name)                              // название спота
                         .put("location", new JSONObject()               // геопозиция
                                 .put("latitude", lat)                   // широта
                                 .put("longitude", lon))                 // долгота
-                        .put("photos", new JSONArray(getVistas(id)));   // массив вист
+                        .put("photos", vistas);   // массив вист
                 // засовываем к другим спотам
                 spots.put(spot);
             }
@@ -323,7 +327,13 @@ public class Data {
 
     public boolean addVista(String path, int spotId) {
         // парсим файл
-        MetadataExtractor me = new MetadataExtractor(getFile(path));
+        MetadataExtractor me;
+        try {
+            me = new MetadataExtractor(new URL(path).openStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
         // достаём широту и долготу и запихиваем в sql функцию wkt
         String geom = "ST_GeomFromText('POINT(" + me.getLat() + " " + me.getLon() + ")', 26910)";
         try (Statement s = conn.createStatement()) {

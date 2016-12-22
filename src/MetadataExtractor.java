@@ -7,6 +7,7 @@ import com.drew.metadata.Tag;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 
 public class MetadataExtractor {
@@ -14,11 +15,13 @@ public class MetadataExtractor {
     private double lat;
     private double lon;
     //private String altitude;
+    private String allInfo;
 
-    public MetadataExtractor(File image) {
+    public MetadataExtractor(InputStream inputStream) {
         try {
             // считываем метаданные
-            metadata = ImageMetadataReader.readMetadata(new FileInputStream(image));
+            metadata = ImageMetadataReader.readMetadata(inputStream);
+            this.allInfo = "";
             // парсим
             parse();
         } catch (ImageProcessingException e) {
@@ -36,14 +39,18 @@ public class MetadataExtractor {
         return lon;
     }
 
+    public String getAllInfo() {
+        return allInfo;
+    }
+
     private void parse() throws IOException, ImageProcessingException {
         for (Directory directory : metadata.getDirectories()) {
             if ("GPS".equals(directory.getName()))
                 parseGPS(directory.getTags());
             // todo: добавить дату и город из Exif SubIFD - Date/Time Original
 
-//            for (Tag tag : directory.getTags())
-//                System.out.println(directory.getName() + " - " + tag.getTagName() + " = " + tag.getDescription());
+            for (Tag tag : directory.getTags())
+                this.allInfo += directory.getName() + " - " + tag.getTagName() + " = " + tag.getDescription() + "\n";
         }
     }
 
