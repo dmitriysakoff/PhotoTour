@@ -161,6 +161,18 @@ public class Data {
      * @throws IllegalArgumentException если у города нет спотов
      */
     public double[] getCityLatLon(int cityId) throws IllegalArgumentException {
+        return getCityLatLon(String.valueOf(cityId));
+    }
+
+    /**
+     * Метод для получения широты и долготы города
+     * Рассчитывается как средняя точка между всеми спотами города
+     *
+     * @param cityId идентификатор города
+     * @return двумерный массив с широтой и долготой
+     * @throws IllegalArgumentException если у города нет спотов
+     */
+    public double[] getCityLatLon(String cityId) throws IllegalArgumentException {
         double[] latlon = new double[2];
         int count = 0; // количество спотов
         try (Statement s = conn.createStatement()) {
@@ -200,7 +212,20 @@ public class Data {
         throw new IllegalArgumentException("Нет картинок для данного города");
     }
 
+    public double[] getVistaLatLon(int id) throws IllegalArgumentException {
+        return getVistaLatLon(String.valueOf(id));
+    }
 
+    public double[] getVistaLatLon(String id) throws IllegalArgumentException {
+        try (Statement s = conn.createStatement()) {
+            ResultSet res = s.executeQuery("select ST_X(geom) lat, ST_Y(geom) lon from vistas where id = " + id + ";");
+            if (res.next())
+                return new double[]{res.getDouble("lat"), res.getDouble("lon")};
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalArgumentException("Нет висты с таким id");
+    }
 
 
     public boolean addCountry(String name) {
