@@ -1,9 +1,6 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -47,14 +44,16 @@ public class Data {
     public String getVistas(String spotId) {
         JSONArray vistas = new JSONArray();
         try (Statement s = conn.createStatement()) {
-            ResultSet res = s.executeQuery("select ST_X(geom) lat, ST_Y(geom) lon, photo_path from vistas where spot_id = " + spotId + ";");
+            ResultSet res = s.executeQuery("select id, ST_X(geom) lat, ST_Y(geom) lon, photo_path from vistas where spot_id = " + spotId + ";");
             while (res.next()) {
                 // получаем данные очередной висты
+                int id = res.getInt("id");
                 double lat = res.getDouble("lat");
                 double lon = res.getDouble("lon");
                 String path = res.getString("photo_path");
                 // создаём объект висты и набиваем
                 JSONObject vista = new JSONObject()
+                        .put("id", String.valueOf(id))      // id строкой
                         .put("url", path)                   // путь к картинке
                         .put("location", new JSONObject()   // геопозиция
                                 .put("latitude", lat)       // широта
@@ -207,7 +206,7 @@ public class Data {
      */
     public String getCityPhoto(int cityId) throws IllegalArgumentException {
         try (Statement s = conn.createStatement()) {
-            ResultSet res = s.executeQuery("select v.photo_path from spots s, vistas v where s.id = v.spot_id and s.city_id = 2 order by RANDOM()");
+            ResultSet res = s.executeQuery("select v.photo_path from spots s, vistas v where s.id = v.spot_id and s.city_id = " + cityId + " order by RANDOM()");
             if (res.next())
                 return res.getString("photo_path");
         } catch (SQLException e) {
