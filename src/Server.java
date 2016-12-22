@@ -10,7 +10,6 @@ public class Server {
         RestExpress server = new RestExpress();
         Cities c = new Cities();
         Route r = new Route();
-        CityImage ci = new CityImage();
 
         server.uri("/cities", c)
                 .method(HttpMethod.GET)
@@ -19,19 +18,25 @@ public class Server {
         server.uri("/route", r)
                 .method(HttpMethod.POST);
 
-        server.uri("/images/city", ci)
-                .method(HttpMethod.GET);
+        if(args.length >= 1){
+            int port = Integer.valueOf(args[0]);
+            server.bind(port);
+        } else {
+            server.bind(SERVER_PORT);
+        }
 
-        server.bind(SERVER_PORT);
         return server;
     }
 
     public static void main(String[] args) {
         try {
             RestExpress server = startServer(args);
-            System.out.println("Hit enter to stop it...");
-            System.in.read();
-            server.shutdown();
+            System.out.println("Listening...");
+
+            while (true){
+                try { Thread.sleep(1000);}
+                catch (Exception ex){}
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
