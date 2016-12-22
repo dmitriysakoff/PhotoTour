@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Route {
 
@@ -45,8 +44,10 @@ class Route {
             }
         }
 
+        List<GeoPoint> sortedPins = sortGeoPoints(pinsLocation);
+
         // google api request
-        String googleStringResponse = googleRequest(pinsLocation);
+        String googleStringResponse = googleRequest(sortedPins);
 
         // build route from google data
         JSONObject googleRespond = new JSONObject(googleStringResponse);
@@ -73,6 +74,56 @@ class Route {
 
         // end
         System.out.println("end of post");
+    }
+
+    private List<GeoPoint> sortGeoPoints(List<GeoPoint> points){
+
+        List<GeoPoint> res = new ArrayList<>();
+
+        GeoPoint start = points.remove(0);
+        res.add(start);
+
+        while(points.size()!=0){
+
+            int minIndex =-1;
+            double minDistance = Double.MAX_VALUE;
+
+            for (int i =0; i < points.size(); i ++){
+                double distance =  getDistanceFromLatLonInKm(start.latitude, start.longitude,
+                        points.get(i).latitude, points.get(i).longitude);
+
+                if (distance < minDistance){
+                    minIndex = i;
+                    minDistance = distance;
+                }
+
+            }
+
+            start = points.remove(minIndex);
+            res.add(start);
+
+        }
+
+        return res;
+
+    }
+
+    private double getDistanceFromLatLonInKm(double lat1,double lon1,double lat2,double lon2) {
+        int R = 6371; // Radius of the earth in km
+        double dLat = deg2rad(lat2-lat1);  // deg2rad below
+        double dLon = deg2rad(lon2-lon1);
+        double a =
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                                Math.sin(dLon/2) * Math.sin(dLon/2)
+                ;
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double d = R * c; // Distance in km
+        return d;
+    }
+
+    private double  deg2rad(double deg) {
+        return deg * (Math.PI/180);
     }
 
     // build wkt response to client
