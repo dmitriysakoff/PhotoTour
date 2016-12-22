@@ -3,8 +3,8 @@ import org.restexpress.RestExpress;
 
 public class Server {
 
-//    private static final int SERVER_PORT = 8080;
-    private static final int SERVER_PORT = 8889;
+    private static final int SERVER_PORT = 8080;
+//    private static final int SERVER_PORT = 8889;
 
     public static RestExpress startServer(String[] args) throws Exception {
         RestExpress server = new RestExpress();
