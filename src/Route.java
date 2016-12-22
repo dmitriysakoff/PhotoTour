@@ -29,6 +29,7 @@ class Route {
         // read ids
         List<GeoPoint> pinsLocation = new ArrayList<>();
         JSONObject pins = new JSONObject(jb.toString());
+        System.out.println(jb.toString());
         JSONArray pinsArray = pins.getJSONArray("pins");
 
         // not enough points for route
