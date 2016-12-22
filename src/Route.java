@@ -29,7 +29,6 @@ class Route {
         // read ids
         List<GeoPoint> pinsLocation = new ArrayList<>();
         JSONObject pins = new JSONObject(jb.toString());
-        System.out.println(jb.toString());
         JSONArray pinsArray = pins.getJSONArray("pins");
 
         // not enough points for route
@@ -59,35 +58,35 @@ class Route {
             return;
         }
 
-        // status is OK, building route
-        String wktRoute = buildWKTResponse(googleRespond);
+//        // status is OK, building route
+//        String wktRoute = buildWKTResponse(googleRespond);
+//
+//        // building response to client
+//        JSONObject errorObject = new JSONObject();
+//        errorObject.put("wkt", wktRoute);
+//        errorObject.put("error_message", JSONObject.NULL);
+//        response.setContentType("application/json");
+//        response.setBody(errorObject);
 
-        // building response to client
-        JSONObject errorObject = new JSONObject();
-        errorObject.put("wkt", wktRoute);
-        errorObject.put("error_message", JSONObject.NULL);
-        //response.setContentType("application/json");
-        response.setBody(errorObject.toString());
+        response.setContentType("application/json");
+        response.setBody(buildResponse(googleRespond));
 
         // end
         System.out.println("end of post");
     }
 
     // build wkt response to client
-    private String buildWKTResponse(JSONObject googleRespond) {
-
-        //'MULTILINESTRING((1 1, 3 3, 5 5),(3 3, 5 5, 7 7))';
+    private JSONObject buildResponse(JSONObject googleRespond) {
 
         JSONArray routes = googleRespond.getJSONArray("routes");
         JSONObject route = routes.getJSONObject(0);
         JSONArray legs = route.getJSONArray("legs");
 
-        String multiLineRes = "MULTILINESTRING(";
-
+        JSONArray wkt = new JSONArray();
         for (int i = 0; i < legs.length(); i++) {
             JSONArray steps = legs.getJSONObject(i).getJSONArray("steps");
 
-            String lineRes = "(";
+            String lineRes = "LINESTRING(";
 
             for (int j = 0; j < steps.length(); j++) {
                 JSONObject polyline = steps.getJSONObject(j).getJSONObject("polyline");
@@ -104,17 +103,19 @@ class Route {
                     System.out.println("polyline_" + totalIndex + " = " + "ERROR");
                 }
             }
-
             lineRes = lineRes.substring(0, lineRes.length() - 2);
-            lineRes += "),";
-            multiLineRes += lineRes;
+            lineRes += ")";
 
+            JSONObject line = new JSONObject();
+            line.put("leg", lineRes);
+
+            wkt.put(line);
         }
 
-        multiLineRes = multiLineRes.substring(0, multiLineRes.length() - 1);
-        multiLineRes += ")";
+        JSONObject res = new JSONObject();
+        res.put("legs", wkt);
 
-        return multiLineRes;
+        return res;
     }
 
     // build google request from pois
@@ -244,4 +245,47 @@ class Route {
         }
     }
 
+// build wkt response to client
+//    private String buildWKTResponse(JSONObject googleRespond) {
+//
+//        //'MULTILINESTRING((1 1, 3 3, 5 5),(3 3, 5 5, 7 7))';
+//
+//        JSONArray routes = googleRespond.getJSONArray("routes");
+//        JSONObject route = routes.getJSONObject(0);
+//        JSONArray legs = route.getJSONArray("legs");
+//
+//        String multiLineRes = "MULTILINESTRING(";
+//
+//        for (int i = 0; i < legs.length(); i++) {
+//            JSONArray steps = legs.getJSONObject(i).getJSONArray("steps");
+//
+//            String lineRes = "(";
+//
+//            for (int j = 0; j < steps.length(); j++) {
+//                JSONObject polyline = steps.getJSONObject(j).getJSONObject("polyline");
+//                String polylineValue = polyline.getString("points");
+//                if (!polylineValue.equals(JSONObject.NULL)) {
+//                    List<GeoPoint> points = decodePoly(polylineValue);
+//
+//                    for (int k = 0; k < points.size(); k++) {
+//                        lineRes += points.get(k).toWKTString() + ", ";
+//                    }
+//
+//                } else {
+//                    int totalIndex = i * steps.length() + j;
+//                    System.out.println("polyline_" + totalIndex + " = " + "ERROR");
+//                }
+//            }
+//
+//            lineRes = lineRes.substring(0, lineRes.length() - 2);
+//            lineRes += "),";
+//            multiLineRes += lineRes;
+//
+//        }
+//
+//        multiLineRes = multiLineRes.substring(0, multiLineRes.length() - 1);
+//        multiLineRes += ")";
+//
+//        return multiLineRes;
+//    }
 }
