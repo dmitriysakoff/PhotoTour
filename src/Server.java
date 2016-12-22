@@ -9,9 +9,14 @@ public class Server {
     public static RestExpress startServer(String[] args) throws Exception {
         RestExpress server = new RestExpress();
         Cities c = new Cities();
+        Spots s = new Spots();
         Route r = new Route();
 
         server.uri("/cities", c)
+                .method(HttpMethod.GET)
+                .noSerialization();
+
+        server.uri("/pois", s)
                 .method(HttpMethod.GET)
                 .noSerialization();
 
