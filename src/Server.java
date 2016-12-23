@@ -1,12 +1,7 @@
 import io.netty.handler.codec.http.HttpMethod;
 import org.restexpress.RestExpress;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 public class Server {
@@ -42,7 +37,7 @@ public class Server {
         return server;
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         try {
             RestExpress server = startServer(args);
             System.out.println("Listening...");
@@ -57,22 +52,28 @@ public class Server {
             ex.printStackTrace();
         }
 
-//        MetadataExtractor me = new MetadataExtractor(new FileInputStream("../Mike-i-20150426-150754.jpg"));
-//        System.out.println(me.getAllInfo());
+        // metadata
+//        MetadataExtractor me = new MetadataExtractor(new URL("http://res.cloudinary.com/megacloud/image/upload/v1482430579/Berlin/mi-20160422-182633_ygntum.jpg").openStream());
+//        System.out.println(me.getLat());
+//        System.out.println(me.getLon());
 
+        // добавление городов
 //        Data d = new Data();
-//        d.addSpot("Saint Basils Cathedral", "55.752524", "37.623087", 1);
-//        d.addSpot("Moscow City", "55.748670", "37.539751", 1);
-//        d.addSpot("Cathedral of Christ the Saviour", "55.744583", "37.605322", 1);
-//        d.addSpot("Moscow Kremlin", "55.751939", "37.617564", 1);
-//        d.addSpot("Zhivopisny Bridge", "55.777094", "37.445113", 1);
-//        d.addSpot("Radisson Hotel", "55.751547", "37.565577", 1);
+//        d.addCity("Berlin", "Germany");
 
+        // добавление спотов
+//        Data d = new Data();
+//        d.addSpot("Brandenburg Gate", "52.516274", "13.377707", 5);
+//        d.addSpot("Reichstag Building", "52.518594", "13.376176", 5);
+//        d.addSpot("St. Marys Church", "52.520605", "13.407111", 5);
+
+        // добавление вист
 //        Data d = new Data();
 //        //System.out.println(d.getSpots(2));
-//        int id = 17;
+//        int id = 22;
 //        String[] paths = new String[]{
-//                "http://res.cloudinary.com/megacloud/image/upload/v1482420579/Mike-i-20150107-010826_e51fal.jpg"};
+//                "http://res.cloudinary.com/megacloud/image/upload/v1482430587/Berlin/mi-20160422-203242_gvwuhz.jpg",
+//                "http://res.cloudinary.com/megacloud/image/upload/v1482430578/Berlin/mi-20160422-203535_jupcpv.jpg"};
 //        for (String p : paths) {
 //            if (d.addVista(p, id))
 //                System.out.println(p + " added");

@@ -206,7 +206,7 @@ public class Data {
      */
     public String getCityPhoto(int cityId) throws IllegalArgumentException {
         try (Statement s = conn.createStatement()) {
-            ResultSet res = s.executeQuery("select v.photo_path from spots s, vistas v where s.id = v.spot_id and s.city_id = " + cityId + " order by RANDOM()");
+            ResultSet res = s.executeQuery("select v.photo_path from spots s, vistas v where s.id = v.spot_id and s.city_id = " + cityId + ";");
             if (res.next())
                 return res.getString("photo_path");
         } catch (SQLException e) {
